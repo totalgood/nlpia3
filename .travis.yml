@@ -1,0 +1,57 @@
+language: python
+python:
+  - "3.6"
+  # - "2.7"
+  # - "3.6-dev"
+  # - "3.7"
+install:
+  - export ENVIRONMENT_YML="conda/environment.yml"
+  - export CONDA_PYTHON_VERSION=3.7
+  - export PYTHON_VERSION=3.6
+  - export CONDA_DIR="$HOME/miniconda"
+  - export CONDA_ENV_NAME="venv_nlpia"
+  - env
+  - sudo apt-get update
+  - sudo apt-get remove -y python-boto
+  - sudo apt-get install -y build-essential gfortran libopenblas-dev liblapack-dev pandoc portaudio19-dev libasound* pulseaudio* libpulse*
+  - bash tests/install_miniconda.sh
+  - env
+  - echo "before hash -r which python: $(which python)"
+  - echo "before hash -r which conda: $(which conda)"
+  # - cp conda/.condarc $HOME/.condarc
+  # - conda update -n base conda
+  - hash -r
+  - echo "after hash -r which python: $(which python)"
+  - echo "after hash -r which conda: $(which conda)"
+  # - conda config --set always_yes yes --set changeps1 no
+  # - conda config --add channels conda-forge
+  - bash tests/create_conda_environment.sh
+  - conda install pip
+  - conda install python-annoy
+  - pip install -U PyScaffold ;
+  # - sudo apt-get install -y python-boto
+  - pip install -r requirements.txt
+  - pip install -U -e .
+  - python -c "import nltk; nltk.download('punkt')"
+  - conda info -a
+  - conda list
+  - pip list
+  # - pip install codecov
+  # - conda build conda-build-recipe
+  # - conda install nlpia --use-local
+
+# after_success:
+#   - bash < (curl -s https://codecov.io/bash)
+#   - codecov
+
+
+script:
+  - python setup.py test
+
+after_script:
+  - travis-cleanup
+
+# cache:
+#   pip: true
+#   directories:
+#     - $HOME/miniconda

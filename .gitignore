@@ -1,0 +1,97 @@
+# Temporary and binary files
+*~
+*.py[cod]
+*.so
+# *.cfg
+!setup.cfg
+!setup27.cfg
+*.orig
+*.log
+*.pot
+__pycache__/*
+.cache/*
+.*.swp
+.~*
+.ipynb_checkpoints
+
+# Project files
+.ropeproject
+.project
+.pydevproject
+.settings
+.idea
+
+# Package files
+*.egg
+*.eggs/
+.installed.cfg
+*.egg-info
+
+# Unittest and coverage
+htmlcov/*
+.coverage*
+.tox
+junit.xml
+coverage.xml
+.pytest_cache/*
+
+# Build and docs folder/files
+build/*
+dist/*
+sdist/*
+docs/api/*
+docs/_build/*
+cover/*
+MANIFEST
+
+# secrets
+secret*
+!secrets.cfg.EXAMPLE_TEMPLATE
+
+# WIP data-driven way to specify BIGDATA_URLS and preprocessing logic:
+src/nlpia/data/bigdata_info.csv
+# recreated with each run of loaders.py so it can be used to replace bigdata_info.csv and hard-coded definitions can be removed:
+src/nlpia/data/bigdata_info.latest.csv
+# big data directory
+src/nlpia/bigdata/*
+!src/nlpia/bigdata/glove_test.txt
+# small data compressed/binary files
+src/nlpia/data/*.gz
+src/nlpia/data/*.bz2
+src/nlpia/data/*.xz
+src/nlpia/data/*.zip
+nlpia/data/*.gz
+nlpia/data/*.bz2
+nlpia/data/*.xz
+nlpia/data/*.zip
+nlpia/bigdata/*.gz
+nlpia/bigdata/*.tgz
+*.h5
+# models created within examples (ch10?)
+*seq2seq_keras_weights*
+*seq2seq_keras_model*
+
+# system files
+.DS_STore
+.vscode
+.coveralls.yml
+
+# Anaconda conda
+envs/
+record.txt
+
+# Backups
+*.bak.*
+*.old.*
+*.new.*
+*.fixed.*
+*.broke.*
+*.master.*
+*.develop.*
+
+# extracted bigdata
+src/nlpia/data/aiml-en-us-foundation-alice/
+
+# models
+*.ann
+
