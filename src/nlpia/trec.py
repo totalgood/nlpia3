@@ -94,7 +94,7 @@ TREC_CLASS_ABBREVIATIONS = dict([(abb, name) for abb, name, desc in TREC_CLASSES
 BATCH_SIZE = 32
 EMBEDDING_SIZE = 512
 EPOCHS = 16
-MODEL_FILEPATH = 'trec_question_classifier_model.h5'
+MODEL_FILEPATH = 'trec_question_classifier_model'
 
 
 def download_trec_urls(urls=TREC_URLS, output_filepath='trec_dataset.csv'):
@@ -206,14 +206,14 @@ def train_model(model, texts=None, labels=None, test_texts=None, test_labels=Non
                             validation_data=(test_texts, test_labels),
                             epochs=epochs,
                             batch_size=batch_size)
-        model.save_weights('./trec_question_classifier_model.weights.h5')
-        model.save(MODEL_FILEPATH)
+        model.save_weights(MODEL_FILEPATH + '.weights.h5')
+        # model.save(MODEL_FILEPATH + '.model.h5')
     return model, history
 
 
 def test_model(model=None, test_texts=None, test_labels=None):
     global EMBEDDER
-    model = MODEL_FILEPATH if model is None else model
+    model = MODEL_FILEPATH + '.weights.h5' if model is None else model
     if isinstance(model, str):
         model_filepath = model
         model = build_model()
