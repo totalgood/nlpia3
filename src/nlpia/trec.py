@@ -136,21 +136,18 @@ def read_trec_files(filepaths=TREC_FILES):
     return pd.DataFrame(lines, columns='dataset class subclass sentence'.split())
 
 
-SESSION = tf.Session()
-SESSION.run([tf.global_variables_initializer(), tf.tables_initializer()])
-
-
 class Embedder:
-    def __init__(self, url="https://tfhub.dev/google/universal-sentence-encoder-large/3", session=SESSION):
+    def __init__(self, url="https://tfhub.dev/google/universal-sentence-encoder-large/3"):
         # Universal Sentence Encoder
         self.tf_model = hub.Module(url)
-        self.session = session
+        self.session = tf.Session()
+        self.session.run([tf.global_variables_initializer(), tf.tables_initializer()])
 
     def embed_batch(self, sentences):
         return self.session.run(self.tf_model(sentences))
 
     def embed_sentence(self, s):
-        return self.embed_batch([s])[0]
+        return self.embed_batch(np.array([s]))[0]
 
     def embed(self, *args, **kwargs):
         return self.tf_model(*args, **kwargs)
@@ -163,7 +160,7 @@ class Embedder:
 EMBEDDER = Embedder()
 
 
-def build_classifier(embed_size=512, num_classes=6):
+def build_model(embed_size=512, num_classes=6):
     input_text = layers.Input(shape=(1,), dtype=tf.string)
     embedding = layers.Lambda(EMBEDDER.keras_embed, output_shape=(embed_size,))(input_text)
     dense = layers.Dense(256, activation='relu')(embedding)
@@ -173,9 +170,8 @@ def build_classifier(embed_size=512, num_classes=6):
     return model
 
 
-def train_classifier(model, texts=None, labels=None, test_texts=None, test_labels=None, test_size=.1):
-    global SESSION
-    SESSION.close()
+def train_model(model, texts=None, labels=None, test_texts=None, test_labels=None, test_size=.1):
+    global EMBEDDER
     df = None
     if isinstance(texts, pd.DataFrame):
         df, texts = texts, None
@@ -193,10 +189,12 @@ def train_classifier(model, texts=None, labels=None, test_texts=None, test_label
     test_mask = np.random.binomial(1, test_size, size=(len(texts),)).astype(bool)
     train_texts, test_texts = texts[~test_mask, :], texts[test_mask, :]
     train_labels, test_labels = labels[~test_mask, :], labels[test_mask, :]
-    with tf.Session() as SESSION:
-        K.set_session(SESSION)
-        SESSION.run(tf.global_variables_initializer())
-        SESSION.run(tf.tables_initializer())
+    EMBEDDER.session.close()
+    with tf.Session() as session:
+        K.set_session(session)
+        session.run(tf.global_variables_initializer())
+        session.run(tf.tables_initializer())
+        EMBEDDER.session = session
         history = model.fit(train_texts,
                             train_labels,
                             validation_data=(test_texts, test_labels),
@@ -204,3 +202,8 @@ def train_classifier(model, texts=None, labels=None, test_texts=None, test_label
                             batch_size=32)
     model.save_weights('./trec_question_classifier_model.h5')
     return model, history
+
+
+if __name__ == '__main__':
+    model = build_model()
+    model, history = train_model(model)
