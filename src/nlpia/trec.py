@@ -219,6 +219,22 @@ def train_model(model, texts=None, labels=None, test_texts=None, test_labels=Non
 
 
 def test_model(model=None, test_texts=None, test_labels=None):
+    """ Predict question categories for examples test_texts provided
+
+    TODO: compute confusion matrix
+
+    >>> test_texts = [
+    ...     "In what year did the titanic sink ?",
+    ...     "What is the highest peak in California ?",
+    ...     "Who invented the light bulb ?",
+    ...     "Where do babies come from ?",
+    ...     "Does life have meaning ?",
+    ...     "What makes the sky blue ?"
+    ...     ]
+    test_labels = 'NUMBER LOCATION HUMAN DESCRIPTION DESCRIPTION DESCRIPTION'.split()
+    >>> test_model(test_texts=test_texts)
+    ['NUMERIC', 'LOCATION', 'HUMAN', 'LOCATION', 'DESCRIPTION', 'DESCRIPTION']
+    """
     global EMBEDDER
     model = MODEL_FILEPATH + '.weights.h5' if model is None else model
     if test_texts is None:
