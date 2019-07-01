@@ -73,6 +73,7 @@ import tensorflow_hub as hub
 
 from keras import layers
 from keras import Model
+import keras.backend as K
 
 
 # df = pd.concat([pd.read_html(f'http://cogcomp.org/Data/QA/QC/train_{i}.label')
@@ -173,6 +174,8 @@ def build_classifier(embed_size=512, num_classes=6):
 
 
 def train_classifier(model, texts=None, labels=None, test_texts=None, test_labels=None, test_size=.1):
+    global SESSION
+    SESSION.close()
     df = None
     if isinstance(texts, pd.DataFrame):
         df, texts = texts, None
@@ -190,8 +193,14 @@ def train_classifier(model, texts=None, labels=None, test_texts=None, test_label
     test_mask = np.random.binomial(1, test_size, size=(len(texts),)).astype(bool)
     train_texts, test_texts = texts[~test_mask, :], texts[test_mask, :]
     train_labels, test_labels = labels[~test_mask, :], labels[test_mask, :]
-    history = model.fit(train_texts, train_labels,
-                        validation_data=(test_texts, test_labels),
-                        epochs=10,
-                        batch_size=32)
+    with tf.Session() as SESSION:
+        K.set_session(SESSION)
+        SESSION.run(tf.global_variables_initializer())
+        SESSION.run(tf.tables_initializer())
+        history = model.fit(train_texts,
+                            train_labels,
+                            validation_data=(test_texts, test_labels),
+                            epochs=10,
+                            batch_size=32)
+    model.save_weights('./trec_question_classifier_model.h5')
     return model, history
