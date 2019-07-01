@@ -154,15 +154,17 @@ class Embedder:
     def embed(self, *args, **kwargs):
         return self.tf_model(*args, **kwargs)
 
-    def keras_embed(self, x, signature="default", as_dict=True, **kwargs):
+    def keras_embed(self, x):
         return self.tf_model(tf.squeeze(tf.cast(x, tf.string)),
-                             signature=signature, as_dict=as_dict, **kwargs)["default"]
+                             signature="default", as_dict=True)["default"]
+
+
+EMBEDDER = Embedder()
 
 
 def build_classifier(embed_size=512, num_classes=6):
-    embedder = Embedder()
     input_text = layers.Input(shape=(1,), dtype=tf.string)
-    embedding = layers.Lambda(embedder.keras_embed, output_shape=(embed_size,))(input_text)
+    embedding = layers.Lambda(EMBEDDER.keras_embed, output_shape=(embed_size,))(input_text)
     dense = layers.Dense(256, activation='relu')(embedding)
     pred = layers.Dense(num_classes, activation='softmax')(dense)
     model = Model(inputs=[input_text], outputs=pred)
