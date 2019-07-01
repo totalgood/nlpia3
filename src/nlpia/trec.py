@@ -194,8 +194,9 @@ def train_model(model, texts=None, labels=None, test_texts=None, test_labels=Non
     if hasattr(texts, 'tolist'):
         texts = texts
     texts = np.array(texts, dtype=object)[:, np.newaxis]
-    labels = np.asarray(pd.get_dummies(labels), dtype=np.int8)
+    labels = pd.get_dummies(labels)  # DataFrame
     DUMMY_LABELS = list(labels.columns)
+    labels = np.asarray(labels, dtype=np.int8)  # 2D array (matrix)
     with open(MODEL_FILEPATH + '.labels.json', 'w') as fout:
         json.dump(fout, DUMMY_LABELS, indent=2)
     test_mask = np.random.binomial(1, test_size, size=(len(texts),)).astype(bool)
