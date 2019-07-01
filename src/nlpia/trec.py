@@ -90,6 +90,7 @@ TREC_CLASSES = [
     ('NUM', 'NUMERIC', 'numeric values'),
     ]
 TREC_CLASS_ABBREVIATIONS = dict([(abb, name) for abb, name, desc in TREC_CLASSES])
+DUMMY_LABELS = [tc[0] for tc in TREC_CLASSES]
 
 BATCH_SIZE = 32
 EMBEDDING_SIZE = 512
@@ -178,6 +179,7 @@ def build_model(embed_size=EMBEDDING_SIZE, num_classes=6):
 def train_model(model, texts=None, labels=None, test_texts=None, test_labels=None, test_size=.1,
                 batch_size=BATCH_SIZE, epochs=EPOCHS):
     global EMBEDDER
+    global DUMMY_LABELS
     df = None
     if isinstance(texts, pd.DataFrame):
         df, texts = texts, None
@@ -192,6 +194,7 @@ def train_model(model, texts=None, labels=None, test_texts=None, test_labels=Non
         texts = texts
     texts = np.array(texts, dtype=object)[:, np.newaxis]
     labels = np.asarray(pd.get_dummies(labels), dtype=np.int8)
+    DUMMY_LABELS = list(labels.columns)
     test_mask = np.random.binomial(1, test_size, size=(len(texts),)).astype(bool)
     train_texts, test_texts = texts[~test_mask, :], texts[test_mask, :]
     train_labels, test_labels = labels[~test_mask, :], labels[test_mask, :]
@@ -236,7 +239,10 @@ def test_model(model=None, test_texts=None, test_labels=None):
             model_filepath = model
             model = build_model()
             model.load_weights(model_filepath)
-        predicted_classes = model.predict(test_texts, batch_size=BATCH_SIZE)
+        predicted_probabilities = model.predict(test_texts, batch_size=BATCH_SIZE)
+    categories = np.array(DUMMY_LABELS)  # df_train.label.cat.categories.tolist()
+    int_labels = predicted_probabilities.argmax(axis=1)
+    predicted_classes = [categories[i] for i in int_labels]
     return predicted_classes
 
 
