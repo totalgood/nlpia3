@@ -216,7 +216,7 @@ def test_model(model=None, test_texts=None, test_labels=None):
     model = MODEL_FILEPATH if model is None else model
     if isinstance(model, str):
         model_filepath = model
-        # model = build_model()
+        model = build_model()
         model.load(model_filepath)
     if test_texts is None:
         test_texts = [
