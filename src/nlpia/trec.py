@@ -214,10 +214,6 @@ def train_model(model, texts=None, labels=None, test_texts=None, test_labels=Non
 def test_model(model=None, test_texts=None, test_labels=None):
     global EMBEDDER
     model = MODEL_FILEPATH + '.weights.h5' if model is None else model
-    if isinstance(model, str):
-        model_filepath = model
-        model = build_model()
-        model.load_weights(model_filepath)
     if test_texts is None:
         test_texts = [
             "In what year did the titanic sink ?",
@@ -236,6 +232,10 @@ def test_model(model=None, test_texts=None, test_labels=None):
         session.run(tf.global_variables_initializer())
         session.run(tf.tables_initializer())
         EMBEDDER.session = session
+        if isinstance(model, str):
+            model_filepath = model
+            model = build_model()
+            model.load_weights(model_filepath)
         predicted_classes = model.predict(test_texts, batch_size=BATCH_SIZE)
     return predicted_classes
 
