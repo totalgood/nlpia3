@@ -217,7 +217,7 @@ def test_model(model=None, test_texts=None, test_labels=None):
     if isinstance(model, str):
         model_filepath = model
         model = build_model()
-        model.load(model_filepath)
+        model.load_weights(model_filepath)
     if test_texts is None:
         test_texts = [
             "In what year did the titanic sink ?",
