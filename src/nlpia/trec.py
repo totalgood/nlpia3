@@ -64,6 +64,7 @@ NUMERIC     numeric values
 import os
 import regex
 import requests
+import json
 
 import numpy as np
 import pandas as pd
@@ -195,6 +196,8 @@ def train_model(model, texts=None, labels=None, test_texts=None, test_labels=Non
     texts = np.array(texts, dtype=object)[:, np.newaxis]
     labels = np.asarray(pd.get_dummies(labels), dtype=np.int8)
     DUMMY_LABELS = list(labels.columns)
+    with open(MODEL_FILEPATH + '.labels.json', 'w') as fout:
+        json.dump(fout, DUMMY_LABELS, indent=2)
     test_mask = np.random.binomial(1, test_size, size=(len(texts),)).astype(bool)
     train_texts, test_texts = texts[~test_mask, :], texts[test_mask, :]
     train_labels, test_labels = labels[~test_mask, :], labels[test_mask, :]
@@ -239,6 +242,8 @@ def test_model(model=None, test_texts=None, test_labels=None):
             model_filepath = model
             model = build_model()
             model.load_weights(model_filepath)
+            with open(MODEL_FILEPATH + '.labels.json', 'r') as fin:
+                DUMMY_LABELS = json.load(fin)
         predicted_probabilities = model.predict(test_texts, batch_size=BATCH_SIZE)
     categories = np.array(DUMMY_LABELS)  # df_train.label.cat.categories.tolist()
     int_labels = predicted_probabilities.argmax(axis=1)
