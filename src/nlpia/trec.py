@@ -91,6 +91,11 @@ TREC_CLASSES = [
     ]
 TREC_CLASS_ABBREVIATIONS = dict([(abb, name) for abb, name, desc in TREC_CLASSES])
 
+BATCH_SIZE = 32
+EMBEDDING_SIZE = 512
+EPOCHS = 16
+MODEL_FILEPATH = 'trec_question_classifier_model.h5'
+
 
 def download_trec_urls(urls=TREC_URLS, output_filepath='trec_dataset.csv'):
     """ Download all 6 .label files for the TREC dataset and concatenate them into a DataFrame
@@ -160,7 +165,7 @@ class Embedder:
 EMBEDDER = Embedder()
 
 
-def build_model(embed_size=512, num_classes=6):
+def build_model(embed_size=EMBEDDING_SIZE, num_classes=6):
     input_text = layers.Input(shape=(1,), dtype=tf.string)
     embedding = layers.Lambda(EMBEDDER.keras_embed, output_shape=(embed_size,))(input_text)
     dense = layers.Dense(256, activation='relu')(embedding)
@@ -170,7 +175,8 @@ def build_model(embed_size=512, num_classes=6):
     return model
 
 
-def train_model(model, texts=None, labels=None, test_texts=None, test_labels=None, test_size=.1):
+def train_model(model, texts=None, labels=None, test_texts=None, test_labels=None, test_size=.1,
+                batch_size=BATCH_SIZE, epochs=EPOCHS):
     global EMBEDDER
     df = None
     if isinstance(texts, pd.DataFrame):
@@ -198,10 +204,40 @@ def train_model(model, texts=None, labels=None, test_texts=None, test_labels=Non
         history = model.fit(train_texts,
                             train_labels,
                             validation_data=(test_texts, test_labels),
-                            epochs=10,
-                            batch_size=32)
-    model.save_weights('./trec_question_classifier_model.h5')
+                            epochs=epochs,
+                            batch_size=batch_size)
+        model.save_weights('./trec_question_classifier_model.weights.h5')
+        model.save(MODEL_FILEPATH)
     return model, history
+
+
+def test_model(model=None, test_texts=None, test_labels=None):
+    global EMBEDDER
+    model = MODEL_FILEPATH if model is None else model
+    if isinstance(model, str):
+        model_filepath = model
+        # model = build_model()
+        model.load(model_filepath)
+    if test_texts is None:
+        test_texts = [
+            "In what year did the titanic sink ?",
+            "What is the highest peak in California ?",
+            "Who invented the light bulb ?",
+            "Where do babies come from ?",
+            "Does life have meaning ?",
+            "What makes the sky blue ?"
+            ]
+        test_labels = ['NUMBER', 'LOCATION', 'HUMAN', 'DESCRIPTION', 'DESCRIPTION', 'DESCRIPTION']
+    test_texts = np.array(test_texts, dtype=object)[:, np.newaxis]
+    test_labels = np.array(test_labels)
+    EMBEDDER.session.close()
+    with tf.Session() as session:
+        K.set_session(session)
+        session.run(tf.global_variables_initializer())
+        session.run(tf.tables_initializer())
+        EMBEDDER.session = session
+        predicted_classes = model.predict(test_texts, batch_size=BATCH_SIZE)
+    return predicted_classes
 
 
 if __name__ == '__main__':
