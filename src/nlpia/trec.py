@@ -198,7 +198,7 @@ def train_model(model, texts=None, labels=None, test_texts=None, test_labels=Non
     DUMMY_LABELS = list(labels.columns)
     labels = np.asarray(labels, dtype=np.int8)  # 2D array (matrix)
     with open(MODEL_FILEPATH + '.labels.json', 'w') as fout:
-        json.dump(fout, DUMMY_LABELS, indent=2)
+        json.dump(DUMMY_LABELS, fout, indent=2)
     test_mask = np.random.binomial(1, test_size, size=(len(texts),)).astype(bool)
     train_texts, test_texts = texts[~test_mask, :], texts[test_mask, :]
     train_labels, test_labels = labels[~test_mask, :], labels[test_mask, :]
