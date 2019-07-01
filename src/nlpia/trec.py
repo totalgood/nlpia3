@@ -65,7 +65,14 @@ import os
 import regex
 import requests
 
+import numpy as np
 import pandas as pd
+
+import tensorflow as tf
+import tensorflow_hub as hub
+
+from keras import layers
+from keras import Model
 
 
 # df = pd.concat([pd.read_html(f'http://cogcomp.org/Data/QA/QC/train_{i}.label')
@@ -126,3 +133,63 @@ def read_trec_files(filepaths=TREC_FILES):
     # df = pd.concat([pd.read_html(f'http://cogcomp.org/Data/QA/QC/train_{i}.label')
     #                 for i in (1000, 2000, 3000, 4000, 5500)], columns=['line'])
     return pd.DataFrame(lines, columns='dataset class subclass sentence'.split())
+
+
+SESSION = tf.Session()
+SESSION.run([tf.global_variables_initializer(), tf.tables_initializer()])
+
+
+class Embedder:
+    def __init__(self, url="https://tfhub.dev/google/universal-sentence-encoder-large/3", session=SESSION):
+        # Universal Sentence Encoder
+        self.tf_model = hub.Module(url)
+        self.session = session
+
+    def embed_batch(self, sentences):
+        return self.session.run(self.tf_model(sentences))
+
+    def embed_sentence(self, s):
+        return self.embed_batch([s])[0]
+
+    def embed(self, *args, **kwargs):
+        return self.tf_model(*args, **kwargs)
+
+    def keras_embed(self, x, signature="default", as_dict=True, **kwargs):
+        return self.tf_model(tf.squeeze(tf.cast(x, tf.string)),
+                             signature=signature, as_dict=as_dict, **kwargs)["default"]
+
+
+def build_classifier(embed_size=512, num_classes=6):
+    embedder = Embedder()
+    input_text = layers.Input(shape=(1,), dtype=tf.string)
+    embedding = layers.Lambda(embedder.keras_embed, output_shape=(embed_size,))(input_text)
+    dense = layers.Dense(256, activation='relu')(embedding)
+    pred = layers.Dense(num_classes, activation='softmax')(dense)
+    model = Model(inputs=[input_text], outputs=pred)
+    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    return model
+
+
+def train_classifier(model, texts=None, labels=None, test_texts=None, test_labels=None, test_size=.1):
+    df = None
+    if isinstance(texts, pd.DataFrame):
+        df, texts = texts, None
+    if texts is None or labels is None:
+        if df is None:
+            df = download_trec_urls()
+        if texts is None:
+            texts = df['sentence']
+        if labels is None:
+            labels = df['class']
+    if hasattr(texts, 'tolist'):
+        texts = texts
+    texts = np.array(texts, dtype=object)[:, np.newaxis]
+    labels = np.asarray(pd.get_dummies(labels), dtype=np.int8)
+    test_mask = np.random.binomial(1, test_size, size=(len(texts),)).astype(bool)
+    train_texts, test_texts = texts[~test_mask, :], texts[test_mask, :]
+    train_labels, test_labels = labels[~test_mask, :], labels[test_mask, :]
+    history = model.fit(train_texts, train_labels,
+                        validation_data=(test_texts, test_labels),
+                        epochs=10,
+                        batch_size=32)
+    return model, history
