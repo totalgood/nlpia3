@@ -27,12 +27,12 @@ install:
   - echo "after hash -r which conda: $(which conda)"
   - conda config --set always_yes yes --set changeps1 no
 
-  - conda install pip -y
-  - conda install python-annoy -y
-  - pip install -U PyScaffold ;
+  - conda install pip --yes
+  - conda install python-annoy --yes
+  - pip install --upgrade PyScaffold
   # - sudo apt-get install -y python-boto
   - pip install -r requirements/requirements.txt
-  - pip install -U -e .
+  - pip install --upgrade -e .
   - python -c "import nltk; nltk.download('punkt')"
   - conda info -a
   - conda list
