@@ -110,7 +110,7 @@ BIGDATA_INFO_FILE = os.path.join(DATA_PATH, 'bigdata_info.csv')
 BIGDATA_INFO_LATEST = BIGDATA_INFO_FILE[:-4] + '.latest.csv'
 touch_p(BIGDATA_INFO_FILE, times=False)
 touch_p(BIGDATA_INFO_LATEST, times=False)
-
+CHECKPOINT_PATH = os.path.join(BIGDATA_PATH, 'checkpoints')
 
 UTF8_TABLE = read_csv(os.path.join(DATA_PATH, 'utf8.csv'))
 UTF8_TO_MULTIASCII = dict(zip(UTF8_TABLE.char, UTF8_TABLE.multiascii))
@@ -126,6 +126,12 @@ MAX_LEN_FILEPATH = 1023  # on OSX `open(fn)` raises OSError('Filename too long')
 
 HTML_TAGS = '<HTML', '<A HREF=', '<P>', '<BOLD>', '<SCRIPT', '<DIV', '<TITLE', '<BODY', '<HEADER'
 EOL = os.linesep
+
+if not os.path.isdir(BIGDATA_PATH):
+    os.path.mkdir(BIGDATA_PATH)
+if not os.path.isdir(CHECKPOINT_PATH):
+    os.path.mkdir(CHECKPOINT_PATH)
+
 
 # rename secrets.cfg.EXAMPLE_TEMPLATE -> secrets.cfg then edit secrets.cfg to include your actual credentials
 secrets = configparser.RawConfigParser()
