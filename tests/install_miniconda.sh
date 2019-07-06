@@ -30,8 +30,10 @@ else
     chmod +x miniconda.sh && ./miniconda.sh -b -p "$CONDA_DIR"
 fi
 export PATH=$CONDA_DIR/bin:$PATH
+conda config --add channels conda-forge anaconda
+conda config --set always_yes yes --set changeps1 no
 # Make sure to use the most updated version
-conda update --yes conda
-conda install pip
+conda update conda --yes
+conda install pip --yes
 
 
