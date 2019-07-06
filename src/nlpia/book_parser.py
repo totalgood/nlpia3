@@ -6,7 +6,7 @@ import re
 import logging
 from shutil import copyfile
 
-from pugnlp import futil
+from nlpia import futil
 from nlpia.regexes import CRE_ACRONYM
 # from nlpia.data_utils import iter_lines  # FIXME: reuse
 from nlpia.constants import BOOK_PATH
@@ -33,7 +33,7 @@ HEADER_TYPES = [('source', 'code'), ('latex', 'latex')]
 BLOCK_DELIMITERS = dict([('--', 'code'), ('==', 'natural_sidenote'), ('__', 'natural_quote'), ('**', 'natural_asside'),
                          ('++', 'latexmath'), ('//', 'comment')])
 BLOCK_DELIMITER_CHRS = ''.join([k[0] for k in BLOCK_DELIMITERS.keys()])
-BLOCK_HEADERS = dict([('[tip]', 'natural_tip'), ('[note]', 'natural_note'), 
+BLOCK_HEADERS = dict([('[tip]', 'natural_tip'), ('[note]', 'natural_note'),
                       ('[important]', 'natural_important'), ('[quote]', 'natural_quote')])
 BLOCK_HEADERS4 = dict([(k[:4], v) for k, v in BLOCK_HEADERS.items()])
 
@@ -42,11 +42,11 @@ CRE_ANNOTATION = re.compile(r'^<([0-9]{1,2})>.*')
 HEADER_TYPES = [('source', 'code'), ('latex', 'latex'), ('latexmath', 'latex'),
                 ('template="glossary"', 'natural_glossary'), ("template='glossary'", 'natural_glossary')]
 
-VALID_TAGS = set(['anchor', 'attribute', 'blank_line', 'block_header', 'caption', 'code', 'code_end', 'code_start', ] + 
-                 [b for b in BLOCK_DELIMITERS.values()] + 
-                 [b + '_start' for b in BLOCK_DELIMITERS.values()] + 
-                 [b + '_end' for b in BLOCK_DELIMITERS.values()] + 
-                 ['natural_heading{}'.format(i) for i in range(1, 6)] + 
+VALID_TAGS = set(['anchor', 'attribute', 'blank_line', 'block_header', 'caption', 'code', 'code_end', 'code_start', ] +
+                 [b for b in BLOCK_DELIMITERS.values()] +
+                 [b + '_start' for b in BLOCK_DELIMITERS.values()] +
+                 [b + '_end' for b in BLOCK_DELIMITERS.values()] +
+                 ['natural_heading{}'.format(i) for i in range(1, 6)] +
                  ['image_link', 'natural', 'natural_end', 'natural_start', 'code_header'])
 INCLUDE_TAGS = set(['natural', 'caption'] + ['natural_heading{}'.format(i) for i in range(1, 6)])
 re_bad_footnotes = re.compile(r'footnote:\[' + RE_URL_SIMPLE + r'\]')
@@ -169,7 +169,7 @@ def tag_lines(lines, include_tags=None):
                 block_terminator = None
             else:
                 tag = current_block_type
-        elif current_block_type and (line.rstrip() == block_terminator or 
+        elif current_block_type and (line.rstrip() == block_terminator or
                                      (not block_terminator and not normalized_line)):
             tag = current_block_type + '_end'
             current_block_type = None
@@ -210,7 +210,7 @@ def get_tagged_sections(book_dir=BOOK_PATH, include_tags=None):
 
 
 def find_bad_footnote_urls(tagged_lines, include_tags=None):
-    """ Find lines in the list of 2-tuples of adoc-tagged lines that contain bad footnotes (only urls) 
+    """ Find lines in the list of 2-tuples of adoc-tagged lines that contain bad footnotes (only urls)
 
     >>> sections = get_tagged_sections(BOOK_PATH)
     >>> tagged_lines = list(sections[0][1])
@@ -259,11 +259,11 @@ def infer_url_title(url):
     else:
         logging.error('Unable to retrieve URL: {}'.format(url))
         return None
-    return delimit_slug(title, ' ') 
+    return delimit_slug(title, ' ')
 
 
 def get_line_bad_footnotes(line, tag=None, include_tags=None):
-    """ Return [original_line, url_footnote1, url_footnote2, ... url_footnoteN] for N bad footnotes in the line """ 
+    """ Return [original_line, url_footnote1, url_footnote2, ... url_footnoteN] for N bad footnotes in the line """
     if tag is None or include_tags is None or tag in include_tags or any((tag.startswith(t) for t in include_tags)):
         found_baddies = re_bad_footnotes.findall(line)
         return [line] + [baddie[0] for baddie in found_baddies]
@@ -271,7 +271,7 @@ def get_line_bad_footnotes(line, tag=None, include_tags=None):
 
 
 def translate_line_footnotes(line, tag=None, default_title='<NOT_FOUND>'):
-    r""" Find all bare-url footnotes, like "footnote:[moz.org]" and add a title like "footnote:[Moz (moz.org)]" 
+    r""" Find all bare-url footnotes, like "footnote:[moz.org]" and add a title like "footnote:[Moz (moz.org)]"
 
     >>> translate_line_footnotes('*Morphemes*:: Parts of tokens or words that contain meaning in and of themselves.'\
     ...     'footnote:[https://spacy.io/usage/linguistic-features#rule-based-morphology]')
@@ -375,7 +375,7 @@ def correct_hyperlinks(book_dir=BOOK_PATH, dest=None, include_tags=None,
                        ext='.nlpiabak', skip_untitled=True):
     """ DEPRECATED (see translate_line_footnotes)
 
-    Find bad footnotes (only urls), visit the page, add the title to the footnote 
+    Find bad footnotes (only urls), visit the page, add the title to the footnote
 
     >>> len(correct_hyperlinks(book_dir=BOOK_PATH, dest='cleaned_hyperlinks'))
     2
@@ -392,7 +392,7 @@ def correct_bad_footnote_urls(book_dir=BOOK_PATH, dest=None, include_tags=None,
                               ext='.nlpiabak', skip_untitled=True):
     """ DEPRECATED (see translate_line_footnotes)
 
-    Find bad footnotes (only urls), visit the page, add the title to the footnote 
+    Find bad footnotes (only urls), visit the page, add the title to the footnote
 
     >>> len(correct_bad_footnote_urls(book_dir=BOOK_PATH, dest='cleaned_footnotes'))
     1
@@ -435,7 +435,7 @@ def filter_tagged_lines(tagged_lines, include_tags=None, exclude_tags=None):
 
 
 def main(book_dir=BOOK_PATH, include_tags=None, verbosity=1):
-    r""" Parse all the asciidoc files in book_dir, returning a list of 2-tuples of lists of 2-tuples (tagged lines) 
+    r""" Parse all the asciidoc files in book_dir, returning a list of 2-tuples of lists of 2-tuples (tagged lines)
 
     >>> main(BOOK_PATH, verbosity=0)
     [('.../src/nlpia/data/book/Appendix F -- Glossary.asc', <generator object filter_tagged_lines at ...>)]
@@ -458,7 +458,7 @@ def main(book_dir=BOOK_PATH, include_tags=None, verbosity=1):
     We've collected some definitions of some common NLP and ML acronyms and terminology here.footnote:[...
 
     TODO:
-       `def filter_tagged_lines(tagged_lines)` that returns an iterable. 
+       `def filter_tagged_lines(tagged_lines)` that returns an iterable.
     """
     if verbosity:
         logger.info('book_dir: {}'.format(book_dir))

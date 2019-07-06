@@ -6,7 +6,7 @@ fi
 echo "ENVIRONMENT_YML=$ENVIRONMENT_YML"
 
 if [[ -z "$CONDA_ENV_NAME" ]] ; then
-    export CONDA_ENV_NAME="venv_nlpia"
+    export CONDA_ENV_NAME="nlpiaenv"
 fi
 echo "CONDA_ENV_NAME=$CONDA_ENV_NAME"
 
