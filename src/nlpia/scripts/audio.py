@@ -14,7 +14,7 @@ import argparse
 # from io import BytesIO
 
 
-# import pyaudio  # only works with python2.7?
+import pyaudio
 import simpleaudio as sa
 import wave
 import speech_recognition as sr
@@ -45,6 +45,28 @@ def record_audio(source='Microphone', energy_threshold=300, pause_threshold=.9,
     with getattr(sr, 'Microphone', sr.Microphone)() as audio_source:
         audio = r.listen(source=audio_source)
     return audio
+
+
+def play_wav(filepath=r"/home/pi/code/mycroft/res/snd/start_listening.wav", batch_size=1024):
+    with wave.open(filepath, "rb") as wavfile:
+        p = pyaudio.PyAudio()
+        with p.open(format=p.get_format_from_width(wavfile.getsampwidth()),
+                    channels=wavfile.getnchannels(),
+                    rate=wavfile.getframerate(),
+                    output=True) as out_stream:
+            data = wavfile.readframes(batch_size)
+
+            # play stream
+            while data:
+                out_stream.write(data)
+                data = wavfile.readframes(batch_size)
+
+            # stop stream
+            out_stream.stop_stream()
+            # stream.close()
+
+        # close PyAudio
+        p.terminate()
 
 
 # def play_pyaudio(audio, start=0, stop=None, save=None, batch_size=1024):
