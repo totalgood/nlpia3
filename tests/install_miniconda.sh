@@ -25,12 +25,13 @@ else
     rm -rf "$CONDA_DIR"
     # Use the miniconda installer for faster download / install of conda
     # itself
-    wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh \
-        -O miniconda.sh
+    wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
     chmod +x miniconda.sh && ./miniconda.sh -b -p "$CONDA_DIR"
 fi
-export PATH=$CONDA_DIR/bin:$PATH
-conda config --add channels conda-forge anaconda
+export PATH="$CONDA_DIR/bin:$PATH"
+conda config --add channels anaconda
+conda config --add channels conda-forge
+conda config --add channels defaults
 conda config --set always_yes yes --set changeps1 no
 # Make sure to use the most updated version
 conda update --yes conda
