@@ -29,6 +29,7 @@ else
     chmod +x miniconda.sh && ./miniconda.sh -b -p "$CONDA_DIR"
 fi
 export PATH="$CONDA_DIR/bin:$PATH"
+echo $PATH
 conda config --set always_yes yes
 conda config --set changeps1 no
 conda config --add channels anaconda

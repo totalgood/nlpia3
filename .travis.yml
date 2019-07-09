@@ -29,9 +29,12 @@ install:
   # - conda update -n base conda
   - hash -r
   - "echo \"after hash -r which python: $(which python)\""
+  - which python
   - "echo \"after hash -r which conda: $(which conda)\""
+  - which conda
   - conda install pip --yes
   - conda install python-annoy --yes
+  - echo $PATH
   - pip install --upgrade PyScaffold
   # - sudo apt-get install -y python-boto
   - pip install -r requirements/requirements.txt
