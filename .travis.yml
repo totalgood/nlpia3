@@ -23,7 +23,7 @@ install:
   - conda config --add channels anaconda
   - conda config --set always_yes yes
   - conda config --set changeps1 no
-  - bash tests/create_conda_environment.sh
+  - source tests/create_conda_environment.sh
   # - conda update -n base conda
   - hash -r
   - "echo \"after hash -r which python: $(which python)\""
