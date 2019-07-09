@@ -17,9 +17,7 @@ install:
   - bash tests/install_miniconda.sh
   - env
   - "echo \"before hash -r which python: $(which python)\""
-  - which python
   - "echo \"before hash -r which conda: $(which conda)\""
-  - which conda
   # - cp conda/.condarc $HOME/.condarc
   - conda config --add channels conda-forge
   - conda config --add channels anaconda
