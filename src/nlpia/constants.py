@@ -95,8 +95,14 @@ elif SYSLOG_PATH:
     }
 
 
-logging.config.dictConfig(LOGGING_CONFIG)
-logger = logging.getLogger(__name__)
+try:
+    logging.config.dictConfig(LOGGING_CONFIG)
+    logger = logging.getLogger(__name__)
+    raise NotImplementedError("Force logger to fall back to failsafe file logging.")
+except:  # noqa
+    logging.basicConfig('nlpia_error.log', level=logging.INFO)
+    logger = logging.getLogger(__name__)
+logger.warning('Starting logger in nlpia.constants...')
 
 USER_HOME = os.path.expanduser("~")
 PROJECT_PATH = PRJECT_DIR = BASE_DIR
@@ -128,9 +134,9 @@ HTML_TAGS = '<HTML', '<A HREF=', '<P>', '<BOLD>', '<SCRIPT', '<DIV', '<TITLE', '
 EOL = os.linesep
 
 if not os.path.isdir(BIGDATA_PATH):
-    os.path.mkdir(BIGDATA_PATH)
-if not os.path.isdir(CHECKPOINT_PATH):
-    os.path.mkdir(CHECKPOINT_PATH)
+    os.path.mkdirs(BIGDATA_PATH)
+if not os.path.isdir(CHECKPOINT_PATH):  # Thank you Matt on livebook for catching this
+    os.path.mkdirs(CHECKPOINT_PATH)
 
 
 # rename secrets.cfg.EXAMPLE_TEMPLATE -> secrets.cfg then edit secrets.cfg to include your actual credentials
