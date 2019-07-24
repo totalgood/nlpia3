@@ -2,13 +2,12 @@
 import logging
 import sys
 import os
-from collections import Mapping
 
 import pandas as pd
 from sklearn.manifold import TSNE
 from gensim.models import KeyedVectors
 
-from nlpia.constants import DATA_PATH
+from nlpia.constants import DATA_PATH, Object, dict2obj, mkdir_p, no_tqdm  # noqa
 from nlpia.data.loaders import get_data
 
 

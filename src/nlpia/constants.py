@@ -10,6 +10,7 @@ import configparser
 import logging
 import logging.config
 import os
+import errno
 from collections import Mapping
 
 from pandas import read_csv
@@ -100,7 +101,7 @@ try:
     logger = logging.getLogger(__name__)
     raise NotImplementedError("Force logger to fall back to failsafe file logging.")
 except:  # noqa
-    logging.basicConfig('nlpia_error.log', level=logging.INFO)
+    logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)
 logger.warning('Starting logger in nlpia.constants...')
 
@@ -133,21 +134,19 @@ MAX_LEN_FILEPATH = 1023  # on OSX `open(fn)` raises OSError('Filename too long')
 HTML_TAGS = '<HTML', '<A HREF=', '<P>', '<BOLD>', '<SCRIPT', '<DIV', '<TITLE', '<BODY', '<HEADER'
 EOL = os.linesep
 
-if not os.path.isdir(BIGDATA_PATH):
-    os.path.mkdirs(BIGDATA_PATH)
-if not os.path.isdir(CHECKPOINT_PATH):  # Thank you Matt on livebook for catching this
-    os.path.mkdirs(CHECKPOINT_PATH)
 
+def mkdir_p(path):
+    """ mkdir -p functionality (make intervening directories and ignore existing directories)
 
-# rename secrets.cfg.EXAMPLE_TEMPLATE -> secrets.cfg then edit secrets.cfg to include your actual credentials
-secrets = configparser.RawConfigParser()
-try:
-    secrets.read(os.path.join(PROJECT_PATH, 'secrets.cfg'))
-    secrets = secrets._sections
-except IOError:
-    logger.error('Unable to load/parse secrets.cfg file at "%s". Does it exist?',
-                 os.path.join(PROJECT_PATH, 'secrets.cfg'))
-    secrets = {}
+    SEE: https://stackoverflow.com/a/600612/623735
+    """
+    try:
+        os.makedirs(path)
+    except OSError as exc:  # Python >2.5
+        if exc.errno == errno.EEXIST and os.path.isdir(path):
+            pass
+        else:
+            raise
 
 
 class Object(object):
@@ -194,5 +193,21 @@ def no_tqdm(it, total=1, **kwargs):
     """ Do-nothing iterable wrapper to subsitute for tqdm when verbose==False """
     return it
 
+
+if not os.path.isdir(BIGDATA_PATH):
+    mkdir_p(BIGDATA_PATH, exist_ok=True)
+if not os.path.isdir(CHECKPOINT_PATH):  # Thank you Matt on livebook for catching this
+    mkdir_p(CHECKPOINT_PATH, exist_ok=True)
+
+
+# rename secrets.cfg.EXAMPLE_TEMPLATE -> secrets.cfg then edit secrets.cfg to include your actual credentials
+secrets = configparser.RawConfigParser()
+try:
+    secrets.read(os.path.join(PROJECT_PATH, 'secrets.cfg'))
+    secrets = secrets._sections
+except IOError:
+    logger.error('Unable to load/parse secrets.cfg file at "%s". Does it exist?',
+                 os.path.join(PROJECT_PATH, 'secrets.cfg'))
+    secrets = {}
 
 secrets = dict2obj(secrets)
