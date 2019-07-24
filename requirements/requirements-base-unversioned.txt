@@ -1,0 +1,49 @@
+# these should all work for python==3.7 and maybe 3.6 (except pyqt4)
+# AIML-Bot>=0.0.3,<0.1.0  # requirements-3.6.txt
+annoy
+# boto
+coverage
+cufflinks
+cython
+future
+gensim
+# h5py==2.8.0
+html2text
+jupyter
+Keras
+Keras-Applications
+Keras-Preprocessing
+matplotlib
+MechanicalSoup
+nltk
+# spacy 2.0.18 has requirement numpy>=1.15.0, but you'll have numpy 1.14.3 which is incompatible.
+# spacy 2.0.18 has requirement regex==2018.01.10, but you'll have regex 2018.11.22 which is incompatible.
+# numpy<=1.14.5,>=1.13.3  # tensorflow 1.10 requires numpy<=1.14.5,>=1.13.3, scipy prefers want numpy>=1.15.1
+opencv-python
+# pandas-datareader>=0.5.0
+# pandoc>=2.2.3,<3.0.0
+pathlib
+pillow
+pip
+plac
+plotly
+plyfile
+pugnlp
+pytest
+pytest
+python-levenshtein
+qtconsole
+# PyQt4==5.6.0
+redis>=2.10.6,<2.11.0
+# spacy 2.0.18 has requirement regex==2018.01.10, but you'll have regex 2018.11.22 which is incompatible.
+# regex==2018.01.10
+scikit-learn
+scipy
+seaborn
+setuptools
+spacy
+tensorflow
+tensorflow-hub
+theano
+tqdm
+wheel
