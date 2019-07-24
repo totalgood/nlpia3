@@ -43,46 +43,6 @@ def embed_wordvecs(w2v=None, df=None, vocab='name', embedder=TSNE, **kwargs):
     return pd.DataFrame(tsne.embedding_, columns=['x', 'y'])
 
 
-class Object(object):
-    """If your dict is "flat", this is a simple way to create an object from a dict
-
-    >>> obj = Object()
-    >>> obj.__dict__ = {'a': 1, 'b': 2}
-    >>> obj.a, obj.b
-    (1, 2)
-    """
-    pass
-
-
-# For a nested dict, you need to recursively update __dict__
-def dict2obj(d):
-    """Convert a dict to an object or namespace
-
-
-    >>> d = {'a': 1, 'b': {'c': 2}, 'd': ["hi", {'foo': "bar"}]}
-    >>> obj = dict2obj(d)
-    >>> obj.b.c
-    2
-    >>> obj.d
-    ['hi', {'foo': 'bar'}]
-    >>> d = {'a': 1, 'b': {'c': 2}, 'd': [("hi", {'foo': "bar"})]}
-    >>> obj = dict2obj(d)
-    >>> obj.d.hi.foo
-    'bar'
-    """
-    if isinstance(d, (Mapping, list, tuple)):
-        try:
-            d = dict(d)
-        except (ValueError, TypeError):
-            return d
-    else:
-        return d
-    obj = Object()
-    for k, v in d.items():
-        obj.__dict__[k] = dict2obj(v)
-    return obj
-
-
 """
 Trial and error to produce the steps encoded in embed_vectors() above
 

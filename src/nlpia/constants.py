@@ -10,11 +10,11 @@ import configparser
 import logging
 import logging.config
 import os
+from collections import Mapping
 
 from pandas import read_csv
 from tqdm import tqdm  # noqa
 
-from nlpia.utils import dict2obj
 from pugnlp.futil import touch_p
 import platform
 
@@ -149,9 +149,50 @@ except IOError:
                  os.path.join(PROJECT_PATH, 'secrets.cfg'))
     secrets = {}
 
-secrets = dict2obj(secrets)
+
+class Object(object):
+    """If your dict is "flat", this is a simple way to create an object from a dict
+
+    >>> obj = Object()
+    >>> obj.__dict__ = {'a': 1, 'b': 2}
+    >>> obj.a, obj.b
+    (1, 2)
+    """
+    pass
+
+
+# For a nested dict, you need to recursively update __dict__
+def dict2obj(d):
+    """Convert a dict to an object or namespace
+
+
+    >>> d = {'a': 1, 'b': {'c': 2}, 'd': ["hi", {'foo': "bar"}]}
+    >>> obj = dict2obj(d)
+    >>> obj.b.c
+    2
+    >>> obj.d
+    ['hi', {'foo': 'bar'}]
+    >>> d = {'a': 1, 'b': {'c': 2}, 'd': [("hi", {'foo': "bar"})]}
+    >>> obj = dict2obj(d)
+    >>> obj.d.hi.foo
+    'bar'
+    """
+    if isinstance(d, (Mapping, list, tuple)):
+        try:
+            d = dict(d)
+        except (ValueError, TypeError):
+            return d
+    else:
+        return d
+    obj = Object()
+    for k, v in d.items():
+        obj.__dict__[k] = dict2obj(v)
+    return obj
 
 
 def no_tqdm(it, total=1, **kwargs):
     """ Do-nothing iterable wrapper to subsitute for tqdm when verbose==False """
     return it
+
+
+secrets = dict2obj(secrets)
