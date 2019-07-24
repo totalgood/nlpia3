@@ -14,7 +14,7 @@ import os
 from pandas import read_csv
 from tqdm import tqdm  # noqa
 
-from nlpia.util import dict2obj
+from nlpia.utils import dict2obj
 from pugnlp.futil import touch_p
 import platform
 
