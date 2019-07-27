@@ -26,7 +26,7 @@ install:
   # - conda update -n base conda
   # - travis_wait 30 source tests/create_conda_environment.sh
   - conda update conda
-  - conda env create --verbose --force --debug --prefix "./$CONDA_ENV_NAME" --file "$ENVIRONMENT_YML"
+  - conda env create --verbose --force --prefix "./$CONDA_ENV_NAME" --file "$ENVIRONMENT_YML"
   - source activate "./$CONDA_ENV_NAME"
   - hash -r
   - "echo \"after hash -r which python: $(which python)\""
