@@ -28,7 +28,7 @@ pip
 plac
 plotly
 plyfile
-pugnlp
+# pugnlp
 pytest
 pytest
 python-levenshtein
