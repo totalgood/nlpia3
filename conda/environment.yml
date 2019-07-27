@@ -33,7 +33,9 @@ dependencies:
   - pyscaffold
   - python-levenshtein
   # - python==3.7
+  - pyyaml
   - redis-py
+  - regex
   # spacy 2.0.18 has requirement regex==2018.01.10, but you'll have regex 2018.11.22 which is incompatible.
   # - regex==2018.01.10
   - scipy
