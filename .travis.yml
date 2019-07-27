@@ -7,7 +7,7 @@ python:
 install:
   - export ENVIRONMENT_YML="conda/environment.yml"
   - export CONDA_ENV_NAME="venv_nlpia"
-  - export CONDA_PYTHON_VERSION=3.7
+  - export CONDA_PYTHON_VERSION=3.6
   - export PYTHON_VERSION=3.6
   - export CONDA_DIR="$HOME/miniconda"
   - env
