@@ -47,4 +47,4 @@ dependencies:
   # - python-annoy>=1.9.5,<2.0.0
 
   - pip:
-    - -r requirements/requirements.txt
+    - -r ../requirements/requirements.txt
