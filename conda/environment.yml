@@ -47,4 +47,21 @@ dependencies:
   # - python-annoy>=1.9.5,<2.0.0
 
   - pip:
-    - -r ../requirements/requirements.txt
+    - annoy
+    - coverage
+    - future
+    - html2text
+    - Keras-Applications
+    - Keras-Preprocessing
+    - numpy<2.0,>=1.15.0
+    - pathlib
+    - pillow
+    - plyfile
+    - pytest
+    - python-levenshtein
+    - qtconsole
+    - scikit-learn
+    - seaborn
+    - theano
+    - tqdm
+    - wheel
