@@ -6,10 +6,10 @@ channels:
   - defaults
 
 dependencies:
-  # - boto3
-  # - conda-build
+  - boto3
   - cython
   - gensim
+  - google-auth-oauthlib
   - h5py
   - jupyter
   - keras-applications
