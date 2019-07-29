@@ -14,7 +14,6 @@ Keras-Preprocessing
 matplotlib
 MechanicalSoup
 nltk
-incompatible.
 numpy>=1.15.1
 numpy<2.0,>=1.15.0
 opencv-python
