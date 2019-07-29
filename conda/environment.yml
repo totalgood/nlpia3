@@ -17,34 +17,28 @@ dependencies:
   - keras
   - matplotlib
   - nltk
-  # mkl packages usually already installed in Linux and Mac and they interfere
+  # mkl packages usually already installed in Linux and Mac and they interfere with keras/tf
   - nomkl
-  # spacy 2.0.18 has requirement numpy>=1.15.0, but you'll have numpy 1.14.3 which is incompatible.
-  # - numpy>=1.15.0,<1.16.0
-  # - numpy==1.14.5
+  - numpy<2.0,>=1.15.0
   - opencv
-  # - pandas
+  - pandas
   - pandoc
   - pip
   - plac
   - plotly
-  # pyqt>=5.9.2,<6.0 fails because conda  thinks it needs python2.7
-  # - PyQt4==5.6.0
   - pyscaffold
+  # this will fail on windows:
+  # - python-annoy>=1.9.5,<2.0.0
   - python-levenshtein
   - python==3.6
   - pyyaml
   - redis-py
   - regex
-  # spacy 2.0.18 has requirement regex==2018.01.10, but you'll have regex 2018.11.22 which is incompatible.
-  # - regex==2018.01.10
   - scipy
   - spacy
   - swig
   - tensorflow
   - tensorflow-hub
-  # this will fail on windows:
-  # - python-annoy>=1.9.5,<2.0.0
 
   - pip:
     - annoy
@@ -53,7 +47,6 @@ dependencies:
     - html2text
     - Keras-Applications
     - Keras-Preprocessing
-    - numpy<2.0,>=1.15.0
     - pathlib
     - pillow
     - plyfile
