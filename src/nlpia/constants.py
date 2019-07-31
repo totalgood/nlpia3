@@ -135,7 +135,7 @@ HTML_TAGS = '<HTML', '<A HREF=', '<P>', '<BOLD>', '<SCRIPT', '<DIV', '<TITLE', '
 EOL = os.linesep
 
 
-def mkdir_p(path):
+def mkdir_p(path, exist_ok=True):
     """ mkdir -p functionality (make intervening directories and ignore existing directories)
 
     SEE: https://stackoverflow.com/a/600612/623735
@@ -143,7 +143,7 @@ def mkdir_p(path):
     try:
         os.makedirs(path)
     except OSError as exc:  # Python >2.5
-        if exc.errno == errno.EEXIST and os.path.isdir(path):
+        if exc.errno == errno.EEXIST and os.path.isdir(path) and exist_ok:
             pass
         else:
             raise
