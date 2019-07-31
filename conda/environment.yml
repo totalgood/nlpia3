@@ -16,6 +16,7 @@ dependencies:
   - keras-preprocessing
   - keras
   - matplotlib
+  - mechanicalsoup
   - nltk
   # mkl packages usually already installed in Linux and Mac and they interfere with keras/tf
   - nomkl
