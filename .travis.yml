@@ -6,14 +6,14 @@ python:
   # - "3.7"
 install:
   - export ENVIRONMENT_YML="conda/environment.yml"
-  - export CONDA_ENV_NAME="venv_nlpia"
+  - export CONDA_ENV_NAME="venv_nlpia3"
   - export CONDA_PYTHON_VERSION=3.6
   - export PYTHON_VERSION=3.6
   - export CONDA_DIR="$HOME/miniconda"
   - env
   - sudo apt-get update
   - sudo apt-get remove -y python-boto
-  - sudo apt-get install -y libasound* build-essential gfortran libopenblas-dev liblapack-dev pandoc portaudio19-dev
+  - sudo apt-get install -y libasound* build-essential gfortran liblapack-dev pandoc portaudio19-dev
   # - sudo apt-get install -y build-essential gfortran libopenblas-dev liblapack-dev pandoc portaudio19-dev libasound2-dev pulseaudio libpulse-dev
   - source tests/install_miniconda.sh
   - env
@@ -52,7 +52,7 @@ after_success:
   - codecov
 
 script:
-  - python setup.py test
+  - pytest
 
 after_script:
   - travis-cleanup

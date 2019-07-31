@@ -20,7 +20,7 @@ def get_anki_phrases(lang='english', limit=None):
 
     TODO: improve modularity: def function that takes a single language and call it recursively if necessary
 
-    >>> phrases = get_anki_phrases('afr')[:2]
+    >>> phrases = get_anki_phrases('afr')
     >>> any(('piesang' in s.lower() for s in phrases))
     True
 
@@ -102,4 +102,3 @@ def get_anki_vocab(lang=['eng'], limit=None, filename='anki_en_vocabulary.csv'):
     if filename:
         vocab.to_csv(os.path.join(BIGDATA_PATH, filename))
     return vocab
-

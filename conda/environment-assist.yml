@@ -83,7 +83,7 @@ dependencies:
   - nltk=3.2.5=py_0
   - notebook=5.7.4=py36_1000
   - oauthlib=2.1.0=py_0
-  - openblas=0.3.3=ha44fe06_1
+  # - openblas=0.3.3=ha44fe06_1
   - openh264=1.8.0=hd28b015_0
   - pandoc=2.5=0
   - pandocfilters=1.4.2=py_1

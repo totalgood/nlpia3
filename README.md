@@ -1,10 +1,10 @@
-[![Build Status](https://api.travis-ci.com/totalgood/nlpia.svg?branch=master)](https://travis-ci.com/totalgood/nlpia)
-[![Coverage](https://codecov.io/gh/totalgood/nlpia/branch/master/graph/badge.svg)](https://codecov.io/gh/totalgood/nlpia)
-[![GitHub release](https://img.shields.io/github/release/totalgood/nlpia.svg)](https://github.com/totalgood/nlpia/releases/latest)
-[![PyPI version](https://img.shields.io/pypi/pyversions/nlpia.svg)](https://pypi.org/project/nlpia/)
-[![License](https://img.shields.io/pypi/l/nlpia.svg)](https://pypi.python.org/pypi/nlpia/)
+[![Build Status](https://api.travis-ci.com/totalgood/nlpia3.svg?branch=master)](https://travis-ci.com/totalgood/nlpia3)
+[![Coverage](https://codecov.io/gh/totalgood/nlpia3/branch/master/graph/badge.svg)](https://codecov.io/gh/totalgood/nlpia3)
+[![GitHub release](https://img.shields.io/github/release/totalgood/nlpia3.svg)](https://github.com/totalgood/nlpia3/releases/latest)
+[![PyPI version](https://img.shields.io/pypi/pyversions/nlpia3.svg)](https://pypi.org/project/nlpia3/)
+[![License](https://img.shields.io/pypi/l/nlpia3.svg)](https://pypi.python.org/pypi/nlpia3/)
 
-# NLPIA
+# NLPIA3
 
 Community-driven code for the book [**N**atural **L**anguage **P**rocessing **i**n **A**ction](http://bit.ly/gh-readme-nlpia-book).
 
@@ -77,19 +77,19 @@ echo "alias ipython='winpty ipython'" >> ~/.bashrc
 ### Step 4. Clone this repository
 
 ```bash
-git clone https://github.com/totalgood/nlpia.git
+git clone https://github.com/totalgood/nlpia3.git
 ```
 
 ### Step 5. Install `nlpia`
 
 You have two alternative package managers you can use to install `nlpia`:
 
-5.1. [`conda`](https://github.com/totalgood/nlpia/blob/master/README.md#alternative-51-conda)
-5.2. [`pip`](https://github.com/totalgood/nlpia/blob/master/README.md#alternative-52-pip)
+5.1. [`conda`](https://github.com/totalgood/nlpia3/blob/master/README.md#alternative-51-conda)
+5.2. [`pip`](https://github.com/totalgood/nlpia3/blob/master/README.md#alternative-52-pip)
 
 A helpful [NLPIA](http://bit.ly/gh-readme-nlpia-book) reader, [Hoang Chung Hien](https://github.com/hoangchunghien), created a Dockerfile you can use for a third way to manage your environment:
 
-5.3. [`docker`](https://github.com/totalgood/nlpia/blob/master/README.md#alternative-53-docker)
+5.3. [`docker`](https://github.com/totalgood/nlpia3/blob/master/README.md#alternative-53-docker)
 
 In most cases, `conda` will be able to install python packages faster and more reliably than `pip`. Without `conda` Some packages, such as `python-levenshtein`, require you to compile a C library during installation. Windows doesn't have a a compiler and python package installer that will "just work."
 
@@ -98,10 +98,10 @@ In most cases, `conda` will be able to install python packages faster and more r
 Use `conda` (from the Anaconda3 package that you installed in Step 1 above) to create an environment called `nlpiaenv`:
 
 ```bash
-cd nlpia  # make sure you're in the nlpia directory that contains `setup.py`
-conda env create -n nlpiaenv -f conda/environment.yml
+cd nlpia3  # make sure you're in the nlpia directory that contains `setup.py`
+conda env create -n nlpia3env -f conda/environment.yml
 conda install -y pip  # to get the latest version of pip
-conda activate nlpiaenv
+conda activate nlpia3env
 pip install -e .
 ```
 
@@ -193,7 +193,7 @@ Then open a new notebook and test your code. Make sure save it inside `work` dir
 
 ### 6. Have Fun!
 
-Check out the code examples from the book in `nlpia/nlpia/book/examples` to get ideas:
+Check out the code examples from the book in `nlpia3/src/nlpia/book/examples` to get ideas:
 
 ```bash
 cd nlpia/book/examples
@@ -202,11 +202,11 @@ ls
 
 Help other NLP practitioners by contributing your code and knowledge.
 
-Below are some nlpia feature ideas others might find handy. Contribute your own ideas to https://github.com/totalgood/nlpia/issues .
+Below are some nlpia feature ideas others might find handy. Contribute your own ideas to https://github.com/totalgood/nlpia3/issues .
 
 #### 6.1. Feature 1: Glossary Compiler
 
-Skeleton code and APIs that could be added to the https://github.com/totalgood/nlpia/blob/master/src/nlpia/transcoders.py:`transcoders.py` module.
+Skeleton code and APIs that could be added to the https://github.com/totalgood/nlpia3/blob/master/src/nlpia/transcoders.py:`transcoders.py` module.
 
 
 ```python
@@ -239,7 +239,7 @@ def glossary_from_dir(path, format='asciidoc'):
 #### 6.2. Feature 2: Semantic Search
 
 Use a parser to extract only natural language sentences and headings/titles from a list of lines/sentences from an asciidoc book like "Natural Language Processing in Action".
-Use a sentence segmenter in https://github.com/totalgood/nlpia/blob/master/src/nlpia/transcoders.py:[nlpia.transcoders] to split a book, like _NLPIA_, into a seequence of sentences.
+Use a sentence segmenter in https://github.com/totalgood/nlpia3/blob/master/src/nlpia/transcoders.py:[nlpia.transcoders] to split a book, like _NLPIA_, into a seequence of sentences.
 
 #### 6.3. Feature 3: Semantic Spectrograms
 
@@ -289,7 +289,7 @@ Now you can display your 307x300 spectrogram or "wordogram":
 >>> plt.show()
 ```
 
-[![307x300 spectrogram or "wordogram"](https://raw.githubusercontent.com/totalgood/nlpia/master/docs/ch1_conclusion_spectrogram.png)](https://raw.githubusercontent.com/totalgood/nlpia/master/docs/ch1_conclusion_spectrogram.png)
+[![307x300 spectrogram or "wordogram"](https://raw.githubusercontent.com/totalgood/nlpia3/master/docs/ch1_conclusion_spectrogram.png)](https://raw.githubusercontent.com/totalgood/nlpia3/master/docs/ch1_conclusion_spectrogram.png)
 
 Can you think of some image processing or deep learning algorithms you could run on images of natural language text?
 
@@ -303,7 +303,7 @@ Or you could create a universal sentence embedding using `dfs = [get_data(lang) 
 
 #### Other Ideas
 
-There are a lot more project ideas mentioned in the "Resources" section at the end of the NLPIA Book. Here's an early draft of [that resource list](https://github.com/totalgood/nlpia/blob/master/src/nlpia/data/book/Appendix%20E%20--%20Resources.asc.md).
+There are a lot more project ideas mentioned in the "Resources" section at the end of the NLPIA Book. Here's an early draft of [that resource list](https://github.com/totalgood/nlpia3/blob/master/src/nlpia/data/book/Appendix%20E%20--%20Resources.asc.md).
 
 
 

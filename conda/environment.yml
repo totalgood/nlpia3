@@ -6,7 +6,7 @@ channels:
   - defaults
 
 dependencies:
-  - boto3
+  - botocore
   - cython
   - gensim
   - google-auth-oauthlib
@@ -19,7 +19,7 @@ dependencies:
   - nltk
   # mkl packages usually already installed in Linux and Mac and they interfere with keras/tf
   - nomkl
-  - numpy<2.0,>=1.15.0
+  - numpy
   - opencv
   - pandas
   - pandoc
@@ -29,6 +29,7 @@ dependencies:
   - pyscaffold
   # this will fail on windows:
   # - python-annoy>=1.9.5,<2.0.0
+  - pytest-cov
   - python-levenshtein
   - python==3.6
   - pyyaml
@@ -50,7 +51,6 @@ dependencies:
     - pathlib
     - pillow
     - plyfile
-    - pytest
     - python-levenshtein
     - qtconsole
     - scikit-learn
