@@ -16,10 +16,8 @@ install:
   - sudo apt-get install -y libasound* build-essential gfortran liblapack-dev pandoc portaudio19-dev
   # - sudo apt-get install -y build-essential gfortran libopenblas-dev liblapack-dev pandoc portaudio19-dev libasound2-dev pulseaudio libpulse-dev
   - source tests/install_miniconda.sh
-  - env
-  - "echo \"before hash -r which python: $(which python)\""
-  - "echo \"before hash -r which conda: $(which conda)\""
-  # - cp conda/.condarc $HOME/.condarc
+  - "export PATH=\"$CONDA_DIR/bin:$PATH\""
+  - hash -r
   - conda config --add channels conda-forge
   - conda config --add channels anaconda
   - conda config --set always_yes yes
@@ -28,12 +26,11 @@ install:
   # - travis_wait 30 source tests/create_conda_environment.sh
   - conda update conda
   - conda env create --verbose --force --prefix "./$CONDA_ENV_NAME" --file "$ENVIRONMENT_YML"
-  - source activate "./$CONDA_ENV_NAME"
-  - hash -r
+  - "source activate \"./$CONDA_ENV_NAME\""
   - "echo \"after hash -r which python: $(which python)\""
   - "echo \"after hash -r which conda: $(which conda)\""
   - echo $PATH
-  - conda install pip --yes
+  # - conda install pip --yes
   - conda install python-annoy --yes
   - pip install --upgrade PyScaffold
   # - sudo apt-get install -y python-boto

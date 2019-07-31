@@ -3,7 +3,7 @@ set -e
 if [[ -z "$PYTHON_VERSION" ]] ; then
     export PYTHON_VERSION=3.6
 fi
-echo "PYTHON_VERSION=$CONDA_PYTHON_VERSION"
+echo "PYTHON_VERSION=$PYTHON_VERSION"
 
 if [[ -z "$CONDA_DIR" ]] ; then
     export CONDA_DIR="$HOME/miniconda"
@@ -11,7 +11,7 @@ fi
 echo "CONDA_DIR=$CONDA_DIR"
 
 if [[ -z "$CONDA_ENV_NAME" ]] ; then
-    export CONDA_ENV_NAME="venv_nlpia"
+    export CONDA_ENV_NAME="venv_nlpia3"
 fi
 echo "CONDA_ENV_NAME=$CONDA_ENV_NAME"
 
