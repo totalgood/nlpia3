@@ -54,9 +54,6 @@ after_success:
 script:
   - pytest
 
-after_script:
-  - travis-cleanup
-
 # cache:
 #   pip: true
 #   directories:
