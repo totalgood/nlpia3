@@ -68,7 +68,7 @@ elif [[ "$DISTRIB" == "ubuntu" ]]; then
     apt-get install -y portaudio19-dev python-pyaudio python3-pyaudio
 
     # for scipy
-    apt-get install -y libopenblas-dev liblapack-dev
+    # apt-get install -y libopenblas-dev liblapack-dev
     apt-get install -y python-scipy python3-scipy
 
     # for matplotlib:

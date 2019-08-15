@@ -4,22 +4,23 @@ python:
   # - "2.7"
   # - "3.6-dev"
   # - "3.7"
+before_install:
+  - sudo rm -f /etc/boto.cfg
+
 install:
   - export ENVIRONMENT_YML="conda/environment.yml"
-  - export CONDA_ENV_NAME="venv_nlpia"
+  - export CONDA_ENV_NAME="venv_nlpia3"
   - export CONDA_PYTHON_VERSION=3.6
   - export PYTHON_VERSION=3.6
   - export CONDA_DIR="$HOME/miniconda"
   - env
   - sudo apt-get update
   - sudo apt-get remove -y python-boto
-  - sudo apt-get install -y libasound* build-essential gfortran libopenblas-dev liblapack-dev pandoc portaudio19-dev
+  - sudo apt-get install -y libasound* build-essential gfortran liblapack-dev pandoc portaudio19-dev
   # - sudo apt-get install -y build-essential gfortran libopenblas-dev liblapack-dev pandoc portaudio19-dev libasound2-dev pulseaudio libpulse-dev
   - source tests/install_miniconda.sh
-  - env
-  - "echo \"before hash -r which python: $(which python)\""
-  - "echo \"before hash -r which conda: $(which conda)\""
-  # - cp conda/.condarc $HOME/.condarc
+  - export PATH="$CONDA_DIR/bin:$PATH"
+  - hash -r
   - conda config --add channels conda-forge
   - conda config --add channels anaconda
   - conda config --set always_yes yes
@@ -28,12 +29,11 @@ install:
   # - travis_wait 30 source tests/create_conda_environment.sh
   - conda update conda
   - conda env create --verbose --force --prefix "./$CONDA_ENV_NAME" --file "$ENVIRONMENT_YML"
-  - source activate "./$CONDA_ENV_NAME"
-  - hash -r
-  - "echo \"after hash -r which python: $(which python)\""
-  - "echo \"after hash -r which conda: $(which conda)\""
+  - source activate ./$CONDA_ENV_NAME
+  - touch ./$CONDA_ENV_NAME/boto.cfg
+  - export BOTO_CONFIG="$PWD"/$CONDA_ENV_NAME/boto.cfg
   - echo $PATH
-  - conda install pip --yes
+  # - conda install pip --yes
   - conda install python-annoy --yes
   - pip install --upgrade PyScaffold
   # - sudo apt-get install -y python-boto
@@ -52,10 +52,7 @@ after_success:
   - codecov
 
 script:
-  - python setup.py test
-
-after_script:
-  - travis-cleanup
+  - pytest
 
 # cache:
 #   pip: true
