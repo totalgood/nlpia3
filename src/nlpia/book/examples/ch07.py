@@ -95,7 +95,26 @@ def download_file(url, data_path='.', filename=None, size=None, chunk_size=4096,
 def untar(fname):
     if fname.endswith("tar.gz"):
         with tarfile.open(fname) as tf:
-            tf.extractall()
+            def is_within_directory(directory, target):
+                
+                abs_directory = os.path.abspath(directory)
+                abs_target = os.path.abspath(target)
+            
+                prefix = os.path.commonprefix([abs_directory, abs_target])
+                
+                return prefix == abs_directory
+            
+            def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
+            
+                for member in tar.getmembers():
+                    member_path = os.path.join(path, member.name)
+                    if not is_within_directory(path, member_path):
+                        raise Exception("Attempted Path Traversal in Tar File")
+            
+                tar.extractall(path, members, numeric_owner=numeric_owner) 
+                
+            
+            safe_extract(tf)
     else:
         print("Not a tar.gz file: {}".format(fname))
 
